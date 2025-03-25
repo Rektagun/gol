@@ -1,9 +1,1 @@
 @import "tailwindcss";
-
-.grid-cols-40 {
-  grid-template-columns: repeat(40, minmax(0, 1fr));
-}
-
-.grid-rows-40 {
-  grid-template-rows: repeat(40, minmax(0, 1fr));
-}
