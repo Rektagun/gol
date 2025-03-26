@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import './index.css'
 
 function App() {
-
   const [rows, setRows] = useState(50);
   const [cols, setcols] = useState(100);
   const [cells, setCells] = useState(rows * cols);
   const [mainArray, setMainArray] = useState(Array(cells).fill(0));
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(250);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   const saves = [
     {
@@ -54,6 +54,34 @@ function App() {
 
   const savePattern = () => { };
 
+  const handleMouseDown = (index) => {
+    setIsDrawing(true);
+    drawCell(index);
+  }
+
+  const handleMouseEnter = (index) => {
+    if (isDrawing) {
+      drawCell(index);
+    }
+  }
+
+  const handleMouseUp = () => {
+    setIsDrawing(false);
+  }
+
+  const drawCell = (index) => {
+    setMainArray(prev => {
+      const newArray = [...prev];
+      newArray[index] = 1;
+      return newArray;
+    });
+  }
+
+  const handleRightClick = (index, e) => {
+    e.preventDefault(); // Prevent the default context menu
+    isAlive(index);
+  }
+
   const isAlive = (index) => {
     setMainArray(prev => {
       const newArray = [...prev];
@@ -66,7 +94,6 @@ function App() {
       return newArray;
     });
   }
-
 
   // Use useEffect to handle the game logic when start is true
   useEffect(() => {
@@ -123,23 +150,18 @@ function App() {
     return () => clearInterval(intervalId); // Cleanup on unmount or when start changes
   }, [start, rows, cols, speed]);
 
-
   return (
     <>
       <div className='flex flex-col bg-gray-900 h-screen w-screen p-2 gap-2'>
-
         <div className='flex flex-row bg-gray-800 rounded-2xl p-2 w-fit mx-auto gap-2 font-bold'>
           <button
             onClick={toggleGen}
             className={`px-4 py-2 w-28 hover:opacity-70 active:opacity-60 transition-all duration-75 rounded-lg h-fit ${start ? 'bg-red-900' : 'bg-green-900'}`}>
-
             {start ? 'Stop' : 'Start'}
-
           </button>
           <button
             onClick={resetGrid}
             className={`px-4 py-2 active:opacity-50 hover:opacity-70 transition-all duration-75 rounded-lg h-fit bg-sky-800`}>Reset</button>
-
 
           <div
             className='bg-gray-500 rounded-md w-fit text-white flex flex-row justify-center p-2 items-center'>
@@ -157,37 +179,34 @@ function App() {
           <button
             onClick={savePattern}
             className={`px-4 py-2 active:opacity-50 hover:opacity-70 transition-all duration-75 rounded-lg h-fit bg-sky-800`}>Save</button>
-
-          <div>
-          </div>
-
         </div>
 
-        <div className='m-auto scroll-auto rounded-2xl flex justify-center'>
-
+        <div
+          className='m-auto scroll-auto rounded-2xl flex justify-center'
+          onMouseUp={handleMouseUp}
+        >
           <div
-
             style={{
               gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
               gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
             }}
-
             className={`grid justify-center bg-sky-900 rounded-md`}>
             {mainArray.map((value, index) => {
               return (
                 <button
-                  onClick={() => isAlive(index)}
+                  //onClick={() => isAlive(index)}
+                  onMouseDown={() => handleMouseDown(index)}
                   key={index}
-                  className={`m-0 outline hover:outline-gray-300 text-[6px] hover:text-gray-400 size-4 text-center flex justify-center items-center transition-colors duration-150 ease-out ${mainArray[index] ? 'bg-gray-400' : 'bg-sky-950'}`}
+                  onContextMenu={(e) => handleRightClick(index, e)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  className={`m-0 outline hover:outline-gray-300 text-[6px] hover:text-gray-400 size-4 text-center flex justify-center items-center transition-colors ease-out ${mainArray[index] ? 'bg-gray-400' : 'bg-sky-950'}`}
                 >
-                  {index % 100}
+                  {index % 1000}
                 </button>
               )
             })}
           </div>
-
         </div>
-
       </div>
     </>
   )
