@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './index.css'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 
 function App() {
   const [rows, setRows] = useState(50);
@@ -9,33 +10,9 @@ function App() {
   const [start, setStart] = useState(false);
   const [speed, setSpeed] = useState(250);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [save1, setSave1] = useState(mainArray);
+  const [save2, setSave2] = useState(mainArray);
 
-  const saves = [
-    {
-      id: 1,
-      array: [],
-    },
-    {
-      id: 2,
-      array: [],
-    },
-    {
-      id: 3,
-      array: [],
-    },
-    {
-      id: 4,
-      array: [],
-    },
-    {
-      id: 5,
-      array: [],
-    },
-    {
-      id: 6,
-      array: [],
-    },
-  ]
 
   const updateSpeed = (e) => {
     setSpeed(e.target.value);
@@ -52,7 +29,15 @@ function App() {
     }
   }
 
-  const savePattern = () => { };
+  const savePattern = (slot) => {
+    if (slot === 1) setSave1(mainArray);
+    if (slot === 2) setSave2(mainArray);
+  };
+
+  const loadPattern = (slot) => {
+    if (slot === 1) setMainArray(save1);
+    if (slot === 2) setMainArray(save2);
+  };
 
   const handleMouseDown = (index) => {
     setIsDrawing(true);
@@ -176,9 +161,62 @@ function App() {
               className='bg-gray-500 rounded-md w-28 px-2 text-white flex m-auto' />
           </div>
 
-          <button
-            onClick={savePattern}
-            className={`px-4 py-2 active:opacity-50 hover:opacity-70 transition-all duration-75 rounded-lg h-fit bg-sky-800`}>Save</button>
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <MenuButton className="inline-flex w-full justify-center rounded-md bg-green-700 px-6 py-2 font-bold text-black ring-1 ring-gray-400/80 hover:bg-gray-400">
+                Save
+              </MenuButton>
+            </div>
+
+            <MenuItems
+              transition
+              className="absolute z-10 mt-2 mx-auto w-28 justify-center flex origin-top-right rounded-md bg-white/50 ring-1 ring-black/5"
+            >
+              <div className="gap-2 flex flex-col p-2 w-fit">
+                <MenuItem>
+                  <button
+                    onClick={() => savePattern(1)}
+                    className={`px-4 py-2 w-fit active:opacity-50 hover:opacity-70 transition-all duration-100 rounded-lg h-fit bg-green-800`}>Slot - 1</button>
+                </MenuItem>
+                <MenuItem>
+                  <button
+                    onClick={() => savePattern(2)}
+                    className={`px-4 py-2 w-fit active:opacity-50 hover:opacity-70 transition-all duration-100 rounded-lg h-fit bg-green-800`}>Slot - 2</button>
+                </MenuItem>
+              </div>
+            </MenuItems>
+          </Menu>
+
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <MenuButton className="inline-flex w-full justify-center rounded-md bg-sky-800 px-6 py-2 font-bold text-black ring-1 ring-gray-400/80 hover:bg-gray-400">
+                Load
+              </MenuButton>
+            </div>
+
+            <MenuItems
+              transition
+              className="absolute z-10 mt-2 mx-auto w-28 justify-center flex origin-top-right rounded-md bg-white/50 ring-1 ring-black/5"
+            >
+              <div className="gap-2 flex flex-col p-2 w-fit">
+                <MenuItem>
+
+                  <button
+                    onClick={() => loadPattern(1)}
+                    className={`px-4 py-2 active:opacity-50 hover:opacity-70 transition-all duration-75 rounded-lg h-fit bg-blue-900`}>Slot - 1</button>
+
+                </MenuItem>
+                <MenuItem>
+
+                  <button
+                    onClick={() => loadPattern(2)}
+                    className={`px-4 py-2 active:opacity-50 hover:opacity-70 transition-all duration-75 rounded-lg h-fit bg-blue-900`}>Slot - 2</button>
+
+                </MenuItem>
+              </div>
+            </MenuItems>
+          </Menu>
+
         </div>
 
         <div
