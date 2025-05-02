@@ -13,7 +13,6 @@ function App() {
   const [save1, setSave1] = useState(mainArray);
   const [save2, setSave2] = useState(mainArray);
 
-
   const updateSpeed = (e) => {
     setSpeed(e.target.value);
   }
