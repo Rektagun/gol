@@ -1,1 +1,1 @@
-Things that can be done:
+https://rektagun.github.io/gol/
